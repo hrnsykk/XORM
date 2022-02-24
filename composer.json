@@ -1,0 +1,18 @@
+{
+    "name": "harunsoykok/xorm",
+    "description": "SQL Object/Relational Mapping",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Harun Soykok",
+            "email": "h.soykok@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "XORM\\" : "src/"
+        }
+    },
+    "require": {}
+}
