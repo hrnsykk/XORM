@@ -1,5 +1,5 @@
 SQL Object/Relational Mapping
 
 ```
-    composer require harunsoykok/xorm
+    $ composer require harunsoykok/xorm
 ```
