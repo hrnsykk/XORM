@@ -5,36 +5,24 @@ namespace XORM;
 class XORM extends \PDO
 {
 
-    private $host;
-    private $username;
-    private $password;
-    private $table;
-    private $select;
+    private $host, $username, $password, $table, $select, $limit, $islem, $delete, $insert, $update, $order_by, $sql;
     private $where = null;
-    private $limit;
-    private $islem;
-    private $insert;
-    private $update;
-    private $oder_by;
-    private $sql;
 
 
-    public function __construct($host, $username , $password)
+    public function __construct($host, $username, $password)
     {
-    
+
         $this->host = $host;
         $this->username = $username;
         $this->password = $password;
 
-      parent::__construct($this->host, $this->username ,$this->password, array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
-
+        parent::__construct($this->host, $this->username, $this->password, array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
     }
 
     public function table($param)
     {
         $this->table = $param;
         return $this;
-
     }
 
     public function select($param)
@@ -45,7 +33,6 @@ class XORM extends \PDO
         $this->select = $param;
 
         return $this;
-
     }
 
     public function delete($param)
@@ -55,7 +42,6 @@ class XORM extends \PDO
 
         $this->delete = $param;
         return $this;
-
     }
 
     public function insert($param)
@@ -64,14 +50,13 @@ class XORM extends \PDO
         $this->islem = "INSERT";
         $this->insert = $param;
         return $this;
-
     }
 
     public function sql($param)
     {
-      $this->islem = "SQL";
-      $this->sql = $param;
-      return $this;
+        $this->islem = "SQL";
+        $this->sql = $param;
+        return $this;
     }
 
     public function where($param)
@@ -79,29 +64,26 @@ class XORM extends \PDO
 
         $count = count($param);
 
-        if($count > 1){
+        if ($count > 1) {
 
-          $this->where = "WHERE ";
+            $this->where = "WHERE ";
 
-          foreach ($param as $key => $value) {
-            if ($key === array_key_last($param)){
-              //$this->where .= $key . '= "' . $value .'"';
-              $this->where .= $key . '= ' . $value .'';
-            }else{
-              //$this->where .= $key . '= "' . $value .'" AND ';
-              $this->where .= $key . '= ' . $value .' AND ';
+            foreach ($param as $key => $value) {
+                if ($key === array_key_last($param)) {
+                    //$this->where .= $key . '= "' . $value .'"';
+                    $this->where .= $key . '= ' . $value . '';
+                } else {
+                    //$this->where .= $key . '= "' . $value .'" AND ';
+                    $this->where .= $key . '= ' . $value . ' AND ';
+                }
             }
-          }
+        } else {
 
-        }else{
-
-          //$this->where = 'WHERE ' . key($param) . '="' . $param[key($param)] .'"';
-          $this->where = 'WHERE ' . key($param) . '=' . $param[key($param)] .'';
-
+            //$this->where = 'WHERE ' . key($param) . '="' . $param[key($param)] .'"';
+            $this->where = 'WHERE ' . key($param) . '=' . $param[key($param)] . '';
         }
 
         return $this;
-
     }
 
 
@@ -115,8 +97,6 @@ class XORM extends \PDO
 
 
         return $this;
-
-
     }
 
     public function limit($param)
@@ -126,14 +106,11 @@ class XORM extends \PDO
         if (count($param) == 2) {
 
             $this->limit = "LIMIT " . $param[0] . ',' . $param[1];
-
         } else {
 
             $this->limit = "LIMIT " . $param;
-
         }
         return $this;
-
     }
 
     public function order_by($param)
@@ -142,8 +119,6 @@ class XORM extends \PDO
         $this->order_by = "ORDER BY " . $param;
 
         return $this;
-
-
     }
 
     public function run()
@@ -179,7 +154,6 @@ class XORM extends \PDO
                 foreach ($this->insert as $key => &$value) {
 
                     $insert->bindParam($i++, $value, \PDO::PARAM_STR);
-
                 }
 
                 $insert->execute();
@@ -200,7 +174,6 @@ class XORM extends \PDO
                 foreach ($set as $key => $value) {
 
                     $set__[] = $value . ' = ' . ":$value";
-
                 }
 
                 $set__ = implode(',', $set__);
@@ -216,31 +189,25 @@ class XORM extends \PDO
 
             case "DELETE":
 
-              $key = key($this->delete);
-              $value = current($this->delete);
+                $key = key($this->delete);
+                $value = current($this->delete);
 
-              $sql = "DELETE FROM $this->table WHERE $key = $value";
+                $sql = "DELETE FROM $this->table WHERE $key = $value";
 
-              $delete = $this->prepare($sql);
-              $delete->execute();
+                $delete = $this->prepare($sql);
+                $delete->execute();
 
-              break;
+                break;
 
             case "SQL":
 
 
-              $data = $this->prepare($this->sql);
-              $data->execute();
+                $data = $this->prepare($this->sql);
+                $data->execute();
 
-              return $data->fetchAll(\PDO::FETCH_ASSOC);
+                return $data->fetchAll(\PDO::FETCH_ASSOC);
 
-              break;
-
-
+                break;
         }
-
-
     }
-
-
 }
